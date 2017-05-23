@@ -102,17 +102,9 @@ public class CrimeListFragment extends Fragment {
                             mCrime.getTitle()+ " clicked! ",
                             Toast.LENGTH_SHORT).show();
             */
-            //Intent intent = new Intent(getActivity(), CrimeActivity.class);
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-            //startActivity(intent);
-            startActivityForResult(intent, REQUEST_CRIME);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == REQUEST_CRIME){
-            //Manejar el resultado
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
+            //startActivityForResult(intent, REQUEST_CRIME);
         }
     }
 
