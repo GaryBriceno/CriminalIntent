@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,13 +38,7 @@ public class CrimeLab {
     private CrimeLab(Context context){
         mContext = context.getApplicationContext();
         mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
-//        mCrimes = new ArrayList<>();
-       /* for(int i=0; i<100; i++){
-            Crime crime = new Crime();
-            crime.setTitle("Crime #"+i);
-            crime.setSolved(i%2 == 0);
-            mCrimes.add(crime);
-        }*/
+
     }
 
     public List<Crime> getCrimes(){
@@ -92,12 +88,21 @@ public class CrimeLab {
         }
     }
 
+    public File getPhotoFile(Crime crime){
+        File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if(externalFilesDir == null){
+            return  null;
+        }
+        return new File(externalFilesDir, crime.getPhotoFilename());
+    }
+
     private static ContentValues getContentValues(Crime crime){
         ContentValues values = new ContentValues();
         values.put(CrimeTable.Cols.UUID, crime.getId().toString());
         values.put(CrimeTable.Cols.TITLE, crime.getTitle());
         values.put(CrimeTable.Cols.DATE, crime.getDate().getTime());
         values.put(CrimeTable.Cols.SOLVED, crime.isSolved() ? 1: 0 );
+        values.put(CrimeTable.Cols.SUSPECT, crime.getSuspect());
         return values;
     }
 

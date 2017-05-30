@@ -20,7 +20,8 @@ import pe.net.lambda.criminalintent.modelo.CrimeLab;
  * Created by Gary on 22/05/2017.
  */
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity
+                                implements CrimeFragment.Callbacks{
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
@@ -66,4 +67,9 @@ public class CrimePagerActivity extends AppCompatActivity {
         return intent;
     }
 
+    @Override
+    public void onCrimeUpdate(Crime crime) {
+        /* Se debe implementar CrimeFragment.Callbacks en todas las activity que alberguen CrimeFragment
+        por lo cual agregamos una implementación vacía en esta clase */
+    }
 }
