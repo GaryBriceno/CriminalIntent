@@ -1,5 +1,6 @@
 package pe.net.lambda.criminalintent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,9 +31,25 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-    private static final int REQUEST_CRIME = 1;
     private boolean mSultitleVisible;
+    private Callbacks mCallbacks;
+
+    private static final int REQUEST_CRIME = 1;
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+
+
+    /*
+     Interface a ser implementada por la clase que llame a este Fragment
+     */
+    public interface Callbacks{
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -86,8 +103,10 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get( getActivity() ).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+               /* Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+                startActivity(intent);*/
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSultitleVisible = !mSultitleVisible;
@@ -170,13 +189,10 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            /*Toast.makeText(getActivity(),
-                            mCrime.getTitle()+ " clicked! ",
-                            Toast.LENGTH_SHORT).show();
-            */
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            startActivity(intent);
-            //startActivityForResult(intent, REQUEST_CRIME);
+           /* Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);*/
+            mCallbacks.onCrimeSelected(mCrime);
+
         }
     }
 
@@ -193,5 +209,11 @@ public class CrimeListFragment extends Fragment {
         }
         updateSubtitle();
 
+    }
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        mCallbacks = null;
     }
 }
